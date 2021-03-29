@@ -46,6 +46,7 @@ class _PanchatMessagesState extends State<PanchatMessages> {
               var _channelKey = channelKey.data.docs;
               // print(_channelKey[0].id);
               return Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
                     flex: 9,
@@ -73,7 +74,7 @@ class _PanchatMessagesState extends State<PanchatMessages> {
                     ),
                   ),
                   Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Align(
                       alignment: FractionalOffset.bottomCenter,
                       child: TextField(
