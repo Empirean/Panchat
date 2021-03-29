@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "430195389455",
+    "project_id": "panchat-52f14",
+    "storage_bucket": "panchat-52f14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430195389455:android:703fdf9cb95f20e85c1f7a",
+        "android_client_info": {
+          "package_name": "com.hamunchi.panchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430195389455-nhl2glp331k0jnm9nd464o4vj7fjdcve.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5_vc2Kp7_pZDdOLs26zmt1B-Wio7vdhI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430195389455-nhl2glp331k0jnm9nd464o4vj7fjdcve.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
