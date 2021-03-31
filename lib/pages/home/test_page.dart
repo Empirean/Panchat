@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:panchat/models/users.dart';
-import 'package:panchat/services/database.dart';
 
 class TestPage extends StatefulWidget {
   @override

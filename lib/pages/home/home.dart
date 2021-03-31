@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:panchat/pages/home/chats.dart';
+import 'package:panchat/pages/home/interactions.dart';
 import 'package:panchat/pages/home/requests.dart';
-import 'package:panchat/services/authenticate.dart';
 import 'package:panchat/styles/headerstyle.dart';
 
 class Home extends StatefulWidget {
@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
   ];
   List<Widget> _widgetList = <Widget>[
     Chats(),
-    Requests(),
+    Interactions(),
   ];
 
   void _onTap(int index) {
@@ -33,20 +33,18 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.white12,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text(
-          _title[_currentIndex],
-          style: headerStyle,
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              setState(() {
-                AuthenticationService().signOut();
-              });
-            }
+        title: FlatButton.icon(
+          onPressed: (){
+            Navigator.pushNamed(context, "/actions");
+          },
+          icon: CircleAvatar(
+            child: Icon(Icons.account_circle),
+          ),
+          label: Text(
+            _title[_currentIndex],
+            style: headerStyle,
           )
-        ],
+        ),
       ),
       body: _widgetList[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -65,21 +63,14 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.email,
+              Icons.contact_mail,
             ),
-            label: "Requests"
+            label: "Interaction"
           ),
         ],
         currentIndex: _currentIndex,
         onTap: _onTap,
 
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        child: Icon(Icons.find_in_page),
-        onPressed: () {
-          Navigator.pushNamed(context, "/people");
-        },
       ),
     );
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:panchat/services/database.dart';
 import 'package:panchat/models/users.dart';
 import 'package:panchat/shared/peoplelisttile.dart';
-import 'package:panchat/styles/headerstyle.dart';
 import 'package:provider/provider.dart';
 
 class People extends StatefulWidget {
@@ -22,17 +21,7 @@ class _PeopleState extends State<People> {
     filterList.clear();
     filterList.add(panchatUser.uid);
 
-    return Center(
-      child: Scaffold(
-        backgroundColor: Colors.white12,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text(
-            "People",
-            style: headerStyle,
-          ),
-        ),
-        body: FutureBuilder(
+    return FutureBuilder(
           future: DatabaseService(path: "people").getDocuments(field: "UID", filter: panchatUser.uid),
           builder: (context, userInfo){
             if (userInfo.hasData) {
@@ -98,8 +87,6 @@ class _PeopleState extends State<People> {
               return Container();
             }
           },
-        ),
-      ),
     );
   }
 }

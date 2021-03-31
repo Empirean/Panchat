@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:panchat/pages/home/messages.dart';
+import 'package:panchat/pages/home/panchatactions.dart';
 import 'package:panchat/pages/home/people.dart';
+import 'package:panchat/pages/home/profile.dart';
 import 'package:panchat/pages/wrapper.dart';
 import 'package:provider/provider.dart';
 import 'package:panchat/services/authenticate.dart';
@@ -28,6 +30,8 @@ class _MyAppState extends State<MyApp> {
         routes: {
           "/people" : (context) => People(),
           "/messages" : (context) => PanchatMessages(),
+          "/actions" : (context) => PanchaActions(),
+          "/profile" : (context) => Profile(),
         },
       ),
     );

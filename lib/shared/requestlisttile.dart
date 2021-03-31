@@ -30,7 +30,7 @@ class RequestsListTile extends StatelessWidget {
                   child:Row(
                     children: [
                       Expanded(
-                        flex: 50,
+                        flex: 40,
                         child: StreamBuilder(
                           stream: DatabaseService(path: "people").watchDocuments(field: "UID", filter: targetId),
                           builder: (context, targetInfo){
@@ -51,7 +51,7 @@ class RequestsListTile extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                          flex: 25,
+                          flex: 30,
                           child: Container(
                             margin: EdgeInsets.symmetric(horizontal: 8.0),
                             child: RaisedButton(
@@ -69,7 +69,7 @@ class RequestsListTile extends StatelessWidget {
                           ),
                       ),
                       Expanded(
-                        flex: 25,
+                        flex: 30,
                         child: FutureBuilder(
                           future: DatabaseService(path: "people").getDocuments(field: "UID", filter: targetId),
                           builder:(context, targetInfo){
