@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:panchat/models/logininfo.dart';
 import 'package:panchat/services/database.dart';
 import 'package:panchat/models/users.dart';
 import 'package:panchat/shared/peoplelisttile.dart';
+import 'package:panchat/styles/emptyStyle.dart';
 import 'package:provider/provider.dart';
 
 class People extends StatefulWidget {
@@ -13,24 +15,21 @@ class _PeopleState extends State<People> {
 
   List<String> filterList = new List<String>();
 
-
   @override
   Widget build(BuildContext context) {
-    final panchatUser = Provider.of<PanchatUser>(context, listen: false);
+    final loginInfo = Provider.of<LoginInfo>(context, listen: false);
 
     filterList.clear();
-    filterList.add(panchatUser.uid);
+    filterList.add(loginInfo.uid);
 
     return FutureBuilder(
-          future: DatabaseService(path: "people").getDocuments(field: "UID", filter: panchatUser.uid),
-          builder: (context, userInfo){
+          future: DatabaseService(path: "people").getUserInfo(field: "UID", filter: loginInfo.uid),
+          builder: (context, AsyncSnapshot<PanchatUser> userInfo){
             if (userInfo.hasData) {
-
-              var _user = userInfo.data.docs;
 
               return StreamBuilder(
 
-                stream: DatabaseService(path: "people/" + _user[0].id + "/friends").watchAll(),
+                stream: DatabaseService(path: "people/" + userInfo.data.id + "/friends").watchAll(),
                 builder: (context, friendsInfo){
 
                   if (friendsInfo.hasData) {
@@ -60,13 +59,15 @@ class _PeopleState extends State<People> {
                             return ListView.builder(
                                 itemCount: peopleList.length,
                                 itemBuilder: (context, index) {
-                                  return PeopleListTile(senderId: panchatUser.uid ,targetId: peopleList[index],);
+                                  return PeopleListTile(senderId: loginInfo.uid ,targetId: peopleList[index],);
                                 }
                             );
                           }
                           else {
                             return Center(
-                              child: Text("People"),
+                              child: Text("People",
+                                  style: emptyStyle,
+                              ),
                             );
                           }
                         }

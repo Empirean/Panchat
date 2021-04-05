@@ -120,7 +120,11 @@ class _RegisterState extends State<Register> {
                   hintText: "last name"
                 ),
               ),
-              Text(_errorText),
+              Text(_errorText,
+                style: TextStyle(
+                  color: Colors.red
+                ),
+              ),
               ButtonTheme(
                 minWidth: double.infinity,
                 buttonColor: Colors.black,
@@ -132,14 +136,13 @@ class _RegisterState extends State<Register> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState.validate()){
-                      dynamic result = AuthenticationService().signUpEmail(_email, _password, _firstName, _lastName);
-
-                      setState(() {
-                        if (result is String)
-                        {
+                      dynamic result = await AuthenticationService().signUpEmail(_email, _password, _firstName, _lastName);
+                      if (result is String){
+                        setState(() {
                           _errorText = result;
-                        }
-                      });
+
+                        });
+                      }
                     }
                   }
                 ),

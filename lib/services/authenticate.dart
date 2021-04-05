@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:panchat/models/logininfo.dart';
 import 'package:panchat/models/users.dart';
 
 import 'database.dart';
@@ -7,18 +8,18 @@ class AuthenticationService{
 
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  Stream<PanchatUser> get user{
-    return _firebaseAuth.userChanges().map(_panchatUserFromStream);
+  Stream<LoginInfo> get loginInfo{
+    return _firebaseAuth.userChanges().map(_loginInfoFromStream);
   }
 
-  PanchatUser _panchatUserFromStream(User user)
+  LoginInfo _loginInfoFromStream(User user)
   {
-    return user != null ? PanchatUser(uid: user.uid) : null; 
+    return user != null ? LoginInfo(uid: user.uid) : null;
   }
 
   Future signOut() async {
     try{
-      await _firebaseAuth.signOut();
+      return await _firebaseAuth.signOut();
     }
     on FirebaseAuthException catch(e)
     {
@@ -45,6 +46,7 @@ class AuthenticationService{
         "UID" : uid,
         "FIRST_NAME" : firstName,
         "LAST_NAME" : lastName,
+        "IMAGE" : "pandi_00.png"
       };
       await DatabaseService(path: "people").insert(data);
     }

@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return StreamProvider.value(
-      value: AuthenticationService().user,
+      value: AuthenticationService().loginInfo,
       child: MaterialApp(
         color: Colors.black,
         home: Wrapper(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:panchat/models/logininfo.dart';
 import 'package:panchat/models/users.dart';
 import 'package:panchat/services/database.dart';
 import 'package:panchat/shared/messageslisttile.dart';
@@ -16,18 +17,25 @@ class _PanchatMessagesState extends State<PanchatMessages> {
   Map _channelInfo = {};
   String _channelId;
   String _title;
+  PanchatUser _sender;
+  PanchatUser _target;
 
   @override
   Widget build(BuildContext context) {
 
-    final panchatUser = Provider.of<PanchatUser>(context, listen: false);
+    final loginInfo = Provider.of<LoginInfo>(context, listen: false);
+
     final _controller = TextEditingController();
     final _scrollController = ScrollController();
 
+
     _channelInfo = ModalRoute.of(context).settings.arguments;
+
     if (_channelInfo != null){
       _channelId = _channelInfo["CHANNEL_ID"];
       _title = _channelInfo["TITLE"];
+      _sender = _channelInfo["SENDER_INFO"];
+      _target = _channelInfo["TARGET_INFO"];
     }
 
     return Scaffold(
@@ -44,7 +52,7 @@ class _PanchatMessagesState extends State<PanchatMessages> {
           builder: (context, channelKey){
             if (channelKey.hasData){
               var _channelKey = channelKey.data.docs;
-              // print(_channelKey[0].id);
+
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -63,6 +71,8 @@ class _PanchatMessagesState extends State<PanchatMessages> {
                               return PanchatMessagesListTile(
                                 panchatMessage:  _messages[index]["MESSAGE"],
                                 senderId:  _messages[index]["SENDER_ID"],
+                                sender: _sender,
+                                target: _target,
                               );
                             }
                           );
@@ -80,11 +90,13 @@ class _PanchatMessagesState extends State<PanchatMessages> {
                       child: TextField(
                         controller: _controller,
                         onSubmitted: (val){
+
                           String panchatMessage = val.trim();
+
                           if (panchatMessage.length > 0) {
                             Map<String, dynamic> messageData = {
                               "MESSAGE" : panchatMessage,
-                              "SENDER_ID" : panchatUser.uid,
+                              "SENDER_ID" : loginInfo.uid,
                               "DATE_SENT" : DateTime.now(),
                             };
                             DatabaseService(path: "channels/" + _channelKey[0].id + "/messages").insert(messageData);

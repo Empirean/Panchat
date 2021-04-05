@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:panchat/models/logininfo.dart';
 import 'package:panchat/models/users.dart';
 import 'package:panchat/styles/listtilestyle.dart';
 import 'package:provider/provider.dart';
 
 class PanchatMessagesListTile extends StatelessWidget {
-
   final String senderId;
   final String panchatMessage;
+  final PanchatUser sender;
+  final PanchatUser target;
 
-  PanchatMessagesListTile({this.senderId, this.panchatMessage});
+  PanchatMessagesListTile({this.senderId, this.panchatMessage, this.sender, this.target});
 
   @override
   Widget build(BuildContext context) {
 
-    final panchatUser = Provider.of<PanchatUser>(context, listen: false);
-    bool isOwned = panchatUser.uid == senderId;
+    final loginInfo = Provider.of<LoginInfo>(context, listen: false);
+    bool isOwned = loginInfo.uid == senderId;
 
     return Column(
       children: [
@@ -22,8 +24,15 @@ class PanchatMessagesListTile extends StatelessWidget {
           children: [
             Expanded(
               flex: isOwned ? 3 : 0,
-              child: SizedBox(
+              child: isOwned ? SizedBox(
                 width: isOwned ? 30 : 0,
+              )
+                  :
+              CircleAvatar(
+                backgroundColor: Colors.black,
+                child: Image(
+                  image: AssetImage("assets/${target.image}"),
+                ),
               )
             ),
             Expanded(
@@ -41,7 +50,14 @@ class PanchatMessagesListTile extends StatelessWidget {
             ),
             Expanded(
                 flex: isOwned ? 0 : 3,
-                child: SizedBox(
+                child: isOwned ? CircleAvatar(
+                  backgroundColor: Colors.black,
+                  child: Image(
+                    image: AssetImage("assets/${sender.image}"),
+                  ),
+                )
+                    :
+                SizedBox(
                   width: isOwned ? 0 : 30,
                 )
             ),

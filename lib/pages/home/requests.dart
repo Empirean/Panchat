@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:panchat/models/logininfo.dart';
 import 'package:panchat/models/users.dart';
 import 'package:panchat/services/database.dart';
 import 'package:panchat/shared/requestlisttile.dart';
+import 'package:panchat/styles/emptyStyle.dart';
 import 'package:provider/provider.dart';
 
 class Requests extends StatefulWidget {
@@ -13,17 +15,16 @@ class _RequestsState extends State<Requests> {
 
   @override
   Widget build(BuildContext context) {
-    final panchatUser = Provider.of<PanchatUser>(context, listen:false);
+    final loginInfo = Provider.of<LoginInfo>(context, listen:false);
 
     return FutureBuilder(
-      future: DatabaseService(path: "people").getDocuments(field: "UID", filter: panchatUser.uid),
-      builder: (context, userInfo) {
+      future: DatabaseService(path: "people").getUserInfo(field: "UID", filter: loginInfo.uid),
+      builder: (context, AsyncSnapshot<PanchatUser> userInfo) {
 
         if (userInfo.hasData) {
-          var _user = userInfo.data.docs;
 
           return StreamBuilder(
-              stream: DatabaseService(path: "people/" + _user[0].id + "/requests").watchAll(),
+              stream: DatabaseService(path: "people/" + userInfo.data.id + "/requests").watchAll(),
               builder: (context, requestInfo) {
                 if (requestInfo.hasData) {
                   var _request = requestInfo.data.docs;
@@ -33,14 +34,16 @@ class _RequestsState extends State<Requests> {
                     return ListView.builder(
                         itemCount: _request.length,
                         itemBuilder: (context, index) {
-                          return RequestsListTile(senderId: panchatUser.uid, targetId: _request[index]["UID"],);
+                          return RequestsListTile(senderId: loginInfo.uid, targetId: _request[index]["UID"],);
                         }
                     );
 
                   }
                   else {
                     return Center(
-                      child: Text("Requests"),
+                      child: Text("Requests",
+                        style: emptyStyle,
+                      ),
                     );
                   }
 

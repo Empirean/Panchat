@@ -39,70 +39,24 @@ class DatabaseService{
     return ref.orderBy(field, descending: false).snapshots();
   }
 
-  /*---------------------------------------------------------------------*/
-
-  Future<QuerySnapshot> getDocumentId({String field, String filter}) {
-    return ref.where(filter, isEqualTo: field).get();
+  Stream<PanchatUser> watchUserInfo({String field, String filter})  {
+    return watchDocuments(field: field, filter: filter).map(_panchatUserFromStream);
   }
 
-  Stream<QuerySnapshot> watchDocumentId({String field, String filter}) {
-    return getDocumentId(filter: filter, field: field).asStream();
+  Future<PanchatUser> getUserInfo({String field, String filter})  {
+    return watchDocuments(field: field, filter: filter).map(_panchatUserFromStream).first;
   }
 
-  Stream<QuerySnapshot> requestList({String field, List<String> filter, bool isEqual}) {
-    if (filter.length > 0){
-      if(isEqual) {
-        return ref.where(field,whereIn: filter).snapshots();
-      }
-      else{
-        return ref.where(field,whereNotIn: filter).snapshots();
-      }
-    }
-    return ref.snapshots();
-  }
-
-
-  Stream<QuerySnapshot> friendList({String field, List<String> filter, bool isEqual}) {
-    if (filter.length > 0){
-      if (isEqual) {
-        return ref.where(field, whereIn: filter).snapshots();
-      }
-      else{
-        return ref.where(field, whereNotIn: filter).snapshots();
-      }
-    }
-
-    return ref.snapshots();
-  }
-
-
-  Stream<List<PanchatUser>> get userList{
-    return ref.snapshots().map((e) => _userFromStream(e));
-  }
-
-  Stream<List<PanchatUser>> peopleList({String field, List<String> filter, bool isEqual}){
-
-    if (filter.length > 0){
-      if (isEqual){
-        return ref.where(field, whereIn: filter).snapshots().map((e) => _userFromStream(e));
-      }
-      else{
-        return ref.where(field, whereNotIn: filter).snapshots().map((e) => _userFromStream(e));
-      }
-    }
-
-    return ref.snapshots().map((e) => _userFromStream(e));
-  }
-
-  List<PanchatUser> _userFromStream(QuerySnapshot snapshot,){
-    return snapshot.docs.map((doc) {
+  PanchatUser _panchatUserFromStream(QuerySnapshot user)
+  {
+    return user.docs.map((doc){
       return PanchatUser(
         uid: doc["UID"] ?? "",
+        id: doc.id ?? "",
+        image: doc["IMAGE"] ?? "",
         firstName: doc["FIRST_NAME"] ?? "",
         lastName: doc["LAST_NAME"] ?? "",
-        id: doc.id ?? "",
       );
-    }).toList();
+    }).toList()[0];
   }
-
 }

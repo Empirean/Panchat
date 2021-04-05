@@ -78,7 +78,11 @@ class _LoginState extends State<Login> {
                 });
               },
             ),
-            Text(_errorText),
+            Text(_errorText,
+              style: TextStyle(
+                color: Colors.red
+              ),
+            ),
             ButtonTheme(
               buttonColor: Colors.black,
               minWidth: double.infinity,
@@ -89,10 +93,12 @@ class _LoginState extends State<Login> {
                 ),
                 onPressed: () async {
                   if (_formKey.currentState.validate()){
-                    dynamic _result = await AuthenticationService().signInEmail(_username, _password);
-                    setState(() {
-                      _errorText = _result;
-                    });
+                    dynamic result = await AuthenticationService().signInEmail(_username, _password);
+                    if (result is String){
+                      setState(() {
+                        _errorText = result;
+                      });
+                    }
                   }
                 }
               ),

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:panchat/models/logininfo.dart';
+import 'package:panchat/models/users.dart';
 import 'package:panchat/pages/home/chats.dart';
 import 'package:panchat/pages/home/interactions.dart';
-import 'package:panchat/pages/home/requests.dart';
+import 'package:panchat/services/database.dart';
 import 'package:panchat/styles/headerstyle.dart';
+import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -29,6 +32,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+
+    final loginInfo = Provider.of<LoginInfo>(context, listen: false);
+
     return Scaffold(
       backgroundColor: Colors.white12,
       appBar: AppBar(
@@ -38,7 +44,22 @@ class _HomeState extends State<Home> {
             Navigator.pushNamed(context, "/actions");
           },
           icon: CircleAvatar(
-            child: Icon(Icons.account_circle),
+            backgroundColor: Colors.black,
+            child: StreamBuilder(
+              stream: DatabaseService(path: "people").watchUserInfo(field:"UID", filter: loginInfo.uid),
+              builder: (context, AsyncSnapshot<PanchatUser> panchatUser) {
+                if (panchatUser.hasData){
+                  return Image(
+                    image: AssetImage("assets/" + panchatUser.data.image),
+                  );
+                }
+                else{
+                  return Image(
+                    image: AssetImage("assets/pandi_00.png"),
+                  );
+                }
+              }
+            )
           ),
           label: Text(
             _title[_currentIndex],
@@ -65,7 +86,7 @@ class _HomeState extends State<Home> {
             icon: Icon(
               Icons.contact_mail,
             ),
-            label: "Interaction"
+            label: "People"
           ),
         ],
         currentIndex: _currentIndex,

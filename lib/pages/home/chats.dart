@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:panchat/models/logininfo.dart';
 import 'package:panchat/models/users.dart';
 import 'package:panchat/shared/chatslisttile.dart';
+import 'package:panchat/styles/emptyStyle.dart';
 import 'package:provider/provider.dart';
 import 'package:panchat/services/database.dart';
 
@@ -12,39 +14,47 @@ class Chats extends StatefulWidget {
 class _ChatsState extends State<Chats> {
   @override
   Widget build(BuildContext context) {
-
-    final panchatUser =  Provider.of<PanchatUser>(context, listen:false);
+    final loginInfo = Provider.of<LoginInfo>(context, listen: false);
 
     return FutureBuilder(
-      future: DatabaseService(path: "people").getDocuments(field: "UID", filter: panchatUser.uid),
-      builder: (context, userInfo) {
-        if (userInfo.hasData){
-          var _user = userInfo.data.docs;
+      future: DatabaseService(path: "people").getUserInfo(field: "UID", filter: loginInfo.uid),
+      builder: (context, AsyncSnapshot<PanchatUser> panchatUser) {
+        if (panchatUser.hasData) {
 
           return StreamBuilder(
-            stream: DatabaseService(path: "people/" + _user[0].id + "/friends").watchAll(),
-            builder: (context, friendsInfo) {
+              stream: DatabaseService(path: "people/${panchatUser.data.id}/friends").watchAll(),
+              builder: (context, friendsInfo) {
 
-              if (friendsInfo.hasData){
-                var _friends = friendsInfo.data.docs;
+                if (friendsInfo.hasData){
+                  var _friends = friendsInfo.data.docs;
 
-                return ListView.builder(
-                  itemCount: _friends.length,
-                  itemBuilder: (context, index){
-                    return ChatListTile(senderId: panchatUser.uid, targetId: _friends[index]["UID"],);
+                  if (_friends.length > 0) {
+                    return ListView.builder(
+                        itemCount: _friends.length,
+                        itemBuilder: (context, index){
+                          return ChatListTile(sender: panchatUser.data, targetId: _friends[index]["UID"],);
+                        }
+                    );
                   }
-                );
+                  else{
+                    return Center(
+                      child: Text("Chats",
+                        style: emptyStyle,
+                      ),
+                    );
+                  }
+                }
+                else{
+                  return Container();
+                }
               }
-              else{
-                return Container();
-              }
-            }
           );
         }
-        else{
+        else {
           return Container();
         }
-      }
+      },
+
     );
   }
 }

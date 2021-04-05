@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:panchat/models/logininfo.dart';
 import 'package:panchat/pages/authentication/login.dart';
 import 'package:panchat/models/users.dart';
 import 'package:panchat/pages/authentication/swapper.dart';
@@ -14,9 +15,9 @@ class _WrapperState extends State<Wrapper> {
   @override
   Widget build(BuildContext context) {
 
-    final user = Provider.of<PanchatUser>(context);
+    final loginInfo = Provider.of<LoginInfo>(context);
 
-    if (user != null){
+    if (loginInfo != null){
       return Home();
     }
     else{
